@@ -2,3 +2,4 @@
 experimenting/
 .idea/
 __pycache__/
+*.pypirc
