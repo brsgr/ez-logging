@@ -9,7 +9,7 @@ This primarily revolves around the ezlogging.Log class. log_format is the same a
 logging library. Level is the same as the attribute for the logging class. It accepts one of six inputs. The default
 values are shown below
 
-```
+```python
 class Log(object):
     # Base wrapper class for generating log messages
     def __init__(self, msg, log_format='%(asctime)s - %(levelname)s - %(message)s', level='INFO'):
@@ -23,7 +23,7 @@ class Log(object):
 There are 3 primary methods for this class
 ***
 
-```
+```python
 import ezlogging as ez
 
 a = ez.Log('hello world')
@@ -37,7 +37,7 @@ outputs the log message to console
 ---
 
 
-```
+```python
 import ezlogging as ez
 
 a = ez.Log('hello world')
@@ -49,7 +49,7 @@ saves the logs to directory specificed in the first argument with the file name 
 
 ---
 
-```
+```python
 import ezlogging as ez
 
 a = ez.Log('hello world')
