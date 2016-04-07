@@ -28,8 +28,9 @@ import ezlogging as ez
 
 a = ez.Log('hello world')
 a.console_logging()
-
->>2016-04-07 13:24:17,244 - INFO - hello world
+```
+```
+>> 2016-04-07 13:24:17,244 - INFO - hello world
 ```
 
 outputs the log message to console
@@ -54,5 +55,8 @@ import ezlogging as ez
 
 a = ez.Log('hello world')
 a.console_to_file_logging('log_directory', 'logfilename.log', partition='DAY')
+```
+```
+>> 2016-04-07 13:24:17,244 - INFO - hello world
 ```
  outputs to both console and file
