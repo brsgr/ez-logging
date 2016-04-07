@@ -8,8 +8,8 @@ def directory_dater(log_root, date, partition=''):
     # To YEAR, MONTH, Day, or hour. The default 'time_parition' is day
 
     partition = partition.upper()
-    if partition not in ('DAY', 'YEAR', 'MONTH', 'HOUR', ''):  # Raise value error if kwarg is not valud
-        raise ValueError('time_parition must be one of YEAR, MONTH, DAY, or HOUR')
+    if partition not in ('DAY', 'YEAR', 'MONTH', 'HOUR', ''):  # Raise value error if kwarg is not valid
+        raise ValueError('time_partition must be one of YEAR, MONTH, DAY, or HOUR')
     
     if partition == 'YEAR':  # Generate directory string
         direct = log_root + '\\' + str(date.year)
@@ -67,9 +67,8 @@ class Log(object):
         ch.setFormatter(formatter)
         logger.addHandler(ch)
 
-        logger.debug('This is a test log message.')
+        getattr(logging, self.level.lower())(self.msg)
 
 
 if __name__ == '__main__':
-    a = Log('hello world')
-    a.to_file_logging('C:\\TEMP\\logroot', 'mylogfile.log', partition='DAY')
+    pass
