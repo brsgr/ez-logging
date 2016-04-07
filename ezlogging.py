@@ -50,8 +50,24 @@ class Log(object):
         getattr(logging, self.level.lower())(self.msg)
 
     def console_to_file_logging(self, log_root, name, partition=''): # calls both console and to file logging
-        self.console_logging()
-        self.to_file_logging(log_root, name, partition=partition)
+        direct = directory_dater(log_root, datetime.datetime.now(), partition=partition)  # create directory
+
+        logger = logging.getLogger()
+        logger.setLevel(self.level_dict[self.level])
+
+        formatter = logging.Formatter(self.log_format)
+
+        fh = logging.FileHandler(direct + '\\' + name)
+        fh.setLevel(self.level_dict[self.level])
+        fh.setFormatter(formatter)
+        logger.addHandler(fh)
+
+        ch = logging.StreamHandler()
+        ch.setLevel(self.level_dict[self.level])
+        ch.setFormatter(formatter)
+        logger.addHandler(ch)
+
+        logger.debug('This is a test log message.')
 
 
 if __name__ == '__main__':
