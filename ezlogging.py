@@ -31,43 +31,73 @@ def directory_dater(log_root, date, partition=''):
 
 class Log(object):
     # Base wrapper class for generating log messages
-    def __init__(self, msg, log_format='%(asctime)s - %(levelname)s - %(message)s', level='INFO'):
+    def __init__(self, msg, log_format='%(asctime)s - %(message)s', level='INFO'):
         self.msg = msg
         self.level = level
         self.log_format = log_format
         self.level_dict = {'CRITICAL': 50, 'ERROR': 40, 'WARNING': 30, 'INFO': 20, 'DEBUG': 10, 'NOTSET': 0}
 
     def console_logging(self):  # For printing to the console
-        logging.basicConfig(level=self.level_dict[self.level], format=self.log_format)
-        getattr(logging, self.level.lower())(self.msg)
+        l = logging.getLogger('mylog')  # create logger (name is arbitrary since handlers are cleared every iteration)
+        formatter = logging.Formatter(self.log_format)  # Set formatting from class definition
 
-    def to_file_logging(self, log_root, name, partition=''):  # For printing to file
-        # Log root is the root of the log directory, which further breaks down by year, month, day, and hour
-        # Depending on how partition is set
+        streamHandler = logging.StreamHandler()  # Creates streamhandler (console)
+        streamHandler.setFormatter(formatter)
 
-        direct = directory_dater(log_root, datetime.datetime.now(), partition=partition)
-        logging.basicConfig(filename=direct+'\\'+name, level=self.level_dict[self.level], format=self.log_format)
-        getattr(logging, self.level.lower())(self.msg)
+        l.setLevel(self.level)  # Add handlers to Logger
+        l.addHandler(streamHandler)
 
-    def console_to_file_logging(self, log_root, name, partition=''): # calls both console and to file logging
-        direct = directory_dater(log_root, datetime.datetime.now(), partition=partition)  # create directory
+        log1 = logging.getLogger('mylog')
+        getattr(log1, self.level.lower())(self.msg)  # calls log1.info, log1.debug etc...
 
-        logger = logging.getLogger()
-        logger.setLevel(self.level_dict[self.level])
+        handlers = l.handlers[:]  # Clears handler with every log file write
+        for handler in handlers:
+            handler.close()
+            l.removeHandler(handler)
 
-        formatter = logging.Formatter(self.log_format)
+    def to_file_logging(self, log_root, log_file, partition=''):  # For printing to file
+        direct = directory_dater(log_root, datetime.datetime.now(), partition=partition)  # Directory creator
 
-        fh = logging.FileHandler(direct + '\\' + name)
-        fh.setLevel(self.level_dict[self.level])
-        fh.setFormatter(formatter)
-        logger.addHandler(fh)
+        l = logging.getLogger('mylog')  # create logger (name is arbitrary since handlers are cleared every iteration)
+        formatter = logging.Formatter(self.log_format)  # Set formatting from class definition
+        fileHandler = logging.FileHandler(direct + '\\' + log_file, mode='a')  # Creates filehandler
+        fileHandler.setFormatter(formatter)
 
-        ch = logging.StreamHandler()
-        ch.setLevel(self.level_dict[self.level])
-        ch.setFormatter(formatter)
-        logger.addHandler(ch)
+        l.setLevel(self.level)  # Add handlers to Logger
+        l.addHandler(fileHandler)
 
-        getattr(logging, self.level.lower())(self.msg)
+        log1 = logging.getLogger('mylog')
+        getattr(log1, self.level.lower())(self.msg)  # calls log1.info, log1.debug etc...
+
+        handlers = l.handlers[:]  # Clears handler with every log file write
+        for handler in handlers:
+            handler.close()
+            l.removeHandler(handler)
+
+    def console_to_file_logging(self, log_root, log_file,partition=''):  # both console and file logging
+        direct = directory_dater(log_root, datetime.datetime.now(), partition=partition)  # Directory creator
+
+        l = logging.getLogger('mylog')  # create logger (name is arbitrary since handlers are cleared every iteration)
+        formatter = logging.Formatter(self.log_format)  # Set formatting from class definition
+        fileHandler = logging.FileHandler(direct + '\\' + log_file, mode='a')  # Creates filehandler
+        fileHandler.setFormatter(formatter)
+        streamHandler = logging.StreamHandler()  # Creates streamhandler (console)
+        streamHandler.setFormatter(formatter)
+
+        l.setLevel(self.level)  # Add handlers to Logger
+        l.addHandler(fileHandler)
+        l.addHandler(streamHandler)
+
+        log1 = logging.getLogger('mylog')
+
+        getattr(log1, self.level.lower())(self.msg)  # calls log1.info, log1.debug etc...
+
+        handlers = l.handlers[:]  # Clears handler with every log file write
+        for handler in handlers:
+            handler.close()
+            l.removeHandler(handler)
+
+
 
 
 if __name__ == '__main__':

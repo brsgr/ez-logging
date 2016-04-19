@@ -4,3 +4,4 @@ experimenting/
 __pycache__/
 *.pypirc
 foo.py
+bar.py
